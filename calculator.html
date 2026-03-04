@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>简易计算器</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    .calculator {
+      background: white;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      width: 320px;
+    }
+    .display {
+      background: #1e293b;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      text-align: right;
+    }
+    .display-input {
+      color: #94a3b8;
+      font-size: 16px;
+      min-height: 24px;
+      word-break: break-all;
+    }
+    .display-result {
+      color: white;
+      font-size: 36px;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    button {
+      padding: 16px;
+      font-size: 20px;
+      font-weight: 500;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: #f1f5f9;
+      color: #1e293b;
+    }
+    button:hover {
+      transform: scale(1.05);
+    }
+    button:active {
+      transform: scale(0.95);
+    }
+    .btn-operator {
+      background: #667eea;
+      color: white;
+    }
+    .btn-operator:hover {
+      background: #5a67d8;
+    }
+    .btn-equals {
+      background: #10b981;
+      color: white;
+      grid-column: span 2;
+    }
+    .btn-equals:hover {
+      background: #059669;
+    }
+    .btn-clear {
+      background: #ef4444;
+      color: white;
+    }
+    .btn-clear:hover {
+      background: #dc2626;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <div class="display">
+      <div class="display-input" id="inputDisplay"></div>
+      <div class="display-result" id="resultDisplay">0</div>
+    </div>
+    <div class="buttons">
+      <button class="btn-clear" onclick="clearAll()">C</button>
+      <button onclick="deleteChar()">⌫</button>
+      <button class="btn-operator" onclick="addOperator('%')">%</button>
+      <button class="btn-operator" onclick="addOperator('/')">÷</button>
+      
+      <button onclick="addNumber('7')">7</button>
+      <button onclick="addNumber('8')">8</button>
+      <button onclick="addNumber('9')">9</button>
+      <button class="btn-operator" onclick="addOperator('*')">×</button>
+      
+      <button onclick="addNumber('4')">4</button>
+      <button onclick="addNumber('5')">5</button>
+      <button onclick="addNumber('6')">6</button>
+      <button class="btn-operator" onclick="addOperator('-')">−</button>
+      
+      <button onclick="addNumber('1')">1</button>
+      <button onclick="addNumber('2')">2</button>
+      <button onclick="addNumber('3')">3</button>
+      <button class="btn-operator" onclick="addOperator('+')">+</button>
+      
+      <button onclick="addNumber('0')">0</button>
+      <button onclick="addNumber('.')">.</button>
+      <button class="btn-equals" onclick="calculate()">=</button>
+    </div>
+  </div>
+
+  <script>
+    let expression = '';
+    let result = '0';
+
+    const inputDisplay = document.getElementById('inputDisplay');
+    const resultDisplay = document.getElementById('resultDisplay');
+
+    function updateDisplay() {
+      inputDisplay.textContent = expression || '';
+      resultDisplay.textContent = result;
+    }
+
+    function addNumber(num) {
+      if (result !== '0' && expression === '') {
+        result = '0';
+      }
+      // 防止多个小数点
+      if (num === '.' && expression.slice(-1) === '.') {
+        return;
+      }
+      expression += num;
+      updateDisplay();
+    }
+
+    function addOperator(op) {
+      if (expression === '' && result !== '0') {
+        expression = result;
+      }
+      if (expression === '') return;
+      
+      const lastChar = expression.slice(-1);
+      if (['+', '-', '*', '/', '%'].includes(lastChar)) {
+        expression = expression.slice(0, -1) + op;
+      } else {
+        expression += op;
+      }
+      updateDisplay();
+    }
+
+    function deleteChar() {
+      expression = expression.slice(0, -1);
+      updateDisplay();
+    }
+
+    function clearAll() {
+      expression = '';
+      result = '0';
+      updateDisplay();
+    }
+
+    function calculate() {
+      if (expression === '') return;
+      
+      try {
+        // 安全计算：只允许数字和运算符
+        const sanitized = expression.replace(/[^0-9+\-*/.%]/g, '');
+        const evalResult = Function('"use strict";return (' + sanitized + ')')();
+        
+        // 处理精度问题
+        if (!Number.isInteger(evalResult)) {
+          result = Math.round(evalResult * 100000000) / 100000000;
+        } else {
+          result = String(evalResult);
+        }
+        
+        expression = '';
+        updateDisplay();
+      } catch (e) {
+        result = 'Error';
+        expression = '';
+        updateDisplay();
+        setTimeout(() => {
+          result = '0';
+          updateDisplay();
+        }, 1500);
+      }
+    }
+
+    // 键盘支持
+    document.addEventListener('keydown', (e) => {
+      if (e.key >= '0' && e.key <= '9') addNumber(e.key);
+      if (e.key === '.') addNumber('.');
+      if (e.key === '+') addOperator('+');
+      if (e.key === '-') addOperator('-');
+      if (e.key === '*') addOperator('*');
+      if (e.key === '/') addOperator('/');
+      if (e.key === '%') addOperator('%');
+      if (e.key === 'Enter') calculate();
+      if (e.key === 'Escape') clearAll();
+      if (e.key === 'Backspace') deleteChar();
+    });
+  </script>
+</body>
+</html>
