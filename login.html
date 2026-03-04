@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>用户登录</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    .login-container {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 400px;
+    }
+    .login-title {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #333;
+      font-size: 24px;
+      font-weight: 600;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #555;
+      font-size: 14px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.3s;
+    }
+    .form-group input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    .remember-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .remember-row label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #666;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .forgot-link {
+      color: #667eea;
+      font-size: 14px;
+      text-decoration: none;
+    }
+    .forgot-link:hover {
+      text-decoration: underline;
+    }
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+    .error-msg {
+      color: #e74c3c;
+      font-size: 13px;
+      margin-top: 6px;
+      display: none;
+    }
+    .success-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .success-overlay.show {
+      display: flex;
+    }
+    .success-content {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      text-align: center;
+    }
+    .success-content h2 {
+      color: #27ae60;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h1 class="login-title">用户登录</h1>
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="username">用户名</label>
+        <input type="text" id="username" name="username" placeholder="请输入用户名">
+        <div class="error-msg" id="usernameError">请输入用户名</div>
+      </div>
+      <div class="form-group">
+        <label for="password">密码</label>
+        <input type="password" id="password" name="password" placeholder="请输入密码">
+        <div class="error-msg" id="passwordError">请输入密码</div>
+      </div>
+      <div class="remember-row">
+        <label>
+          <input type="checkbox" id="remember">
+          记住我
+        </label>
+        <a href="#" class="forgot-link">忘记密码？</a>
+      </div>
+      <button type="submit" class="login-btn">登 录</button>
+    </form>
+  </div>
+
+  <div class="success-overlay" id="successOverlay">
+    <div class="success-content">
+      <h2>🎉 登录成功！</h2>
+      <p>欢迎回来，<span id="welcomeUser"></span></p>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const usernameError = document.getElementById('usernameError');
+    const passwordError = document.getElementById('passwordError');
+    const successOverlay = document.getElementById('successOverlay');
+    const welcomeUser = document.getElementById('welcomeUser');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      let valid = true;
+      
+      usernameError.style.display = 'none';
+      passwordError.style.display = 'none';
+      
+      if (!usernameInput.value.trim()) {
+        usernameError.style.display = 'block';
+        valid = false;
+      }
+      
+      if (!passwordInput.value.trim()) {
+        passwordError.style.display = 'block';
+        valid = false;
+      }
+      
+      if (valid) {
+        welcomeUser.textContent = usernameInput.value;
+        successOverlay.classList.add('show');
+        
+        setTimeout(() => {
+          successOverlay.classList.remove('show');
+        }, 3000);
+      }
+    });
+  </script>
+</body>
+</html>
