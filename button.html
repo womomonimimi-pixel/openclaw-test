@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>按钮组件</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 30px;
+      padding: 40px;
+    }
+    h1 {
+      color: white;
+      font-size: 28px;
+    }
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+      max-width: 600px;
+    }
+    .btn {
+      padding: 14px 28px;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn:active {
+      transform: scale(0.95);
+    }
+    /* Primary */
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+    .btn-primary:hover {
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+      transform: translateY(-2px);
+    }
+    /* Success */
+    .btn-success {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+    }
+    .btn-success:hover {
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6);
+      transform: translateY(-2px);
+    }
+    /* Danger */
+    .btn-danger {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+    }
+    .btn-danger:hover {
+      box-shadow: 0 6px 20px rgba(239, 68, 68, 0.6);
+      transform: translateY(-2px);
+    }
+    /* Outline */
+    .btn-outline {
+      background: white;
+      color: #667eea;
+      border: 2px solid #667eea;
+    }
+    .btn-outline:hover {
+      background: #667eea;
+      color: white;
+    }
+    /* Small */
+    .btn-sm {
+      padding: 8px 16px;
+      font-size: 14px;
+    }
+    /* Large */
+    .btn-lg {
+      padding: 18px 36px;
+      font-size: 18px;
+    }
+    /* Disabled */
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .result {
+      background: white;
+      padding: 20px 40px;
+      border-radius: 12px;
+      font-size: 18px;
+      color: #333;
+      min-width: 200px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎯 按钮组件</h1>
+  
+  <div class="button-group">
+    <button class="btn btn-primary" onclick="handleClick('主要按钮')">主要按钮</button>
+    <button class="btn btn-success" onclick="handleClick('成功按钮')">成功按钮</button>
+    <button class="btn btn-danger" onclick="handleClick('危险按钮')">危险按钮</button>
+    <button class="btn btn-outline" onclick="handleClick('边框按钮')">边框按钮</button>
+    <button class="btn btn-primary btn-sm" onclick="handleClick('小按钮')">小按钮</button>
+    <button class="btn btn-primary btn-lg" onclick="handleClick('大按钮')">大按钮</button>
+    <button class="btn btn-primary" disabled onclick="handleClick('禁用按钮')">禁用按钮</button>
+  </div>
+  
+  <div class="result" id="result">点击按钮查看效果</div>
+
+  <script>
+    function handleClick(text) {
+      const result = document.getElementById('result');
+      result.textContent = `你点击了: ${text}`;
+      result.style.animation = 'none';
+      setTimeout(() => {
+        result.style.animation = 'pulse 0.3s ease';
+      }, 10);
+    }
+  </script>
+</body>
+</html>
